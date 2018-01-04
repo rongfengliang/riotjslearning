@@ -1,7 +1,8 @@
 <example-tag>
-  <p id="findMe">Do I even Exist?</p>
+  <p class="demo" id="findMe">Do I even Exist?</p>
   <todo></todo>
   <script>
+  var options = require("./app.css");
   var test1 = document.getElementById('findMe')
   console.log('test1', test1)  // Fails
 
@@ -14,6 +15,7 @@
    }
   this.on('mount', function(){
     var test3 = document.getElementById('findMe')
+    console.log(options);
     console.log('test3', test3) // Succeeds, fires once (per mount)
   })
   </script>
@@ -46,8 +48,11 @@
     add(e) {
       e.preventDefault()
       var input = this.refs.input
-      this.items.push(input.value)
-      input.value = ''
+      if(input.value!=""){
+       this.items.push(input.value)
+       input.value = ''
+      }
+      console.log(input.value);
     }
   </script>
 

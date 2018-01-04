@@ -8,10 +8,11 @@
   },
   "scripts": {
     "start": "gulp browserify && live-server",
-    "build":"gulp browserify"
+    "build": "gulp browserify"
   },
   "devDependencies": {
     "browserify": "^14.5.0",
+    "browserify-css": "^0.14.0",
     "gulp": "^3.9.1",
     "live-server": "^1.2.0",
     "riotify": "^2.0.0",

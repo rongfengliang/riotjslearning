@@ -1,4 +1,83 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var css = ".demo {\n  font-size: 100px;\n}\n"; (require("browserify-css").createStyle(css, { "href": "app.css" }, { "insertAt": "bottom" })); module.exports = css;
+},{"browserify-css":2}],2:[function(require,module,exports){
+'use strict';
+// For more information about browser field, check out the browser field at https://github.com/substack/browserify-handbook#browser-field.
+
+var styleElementsInsertedAtTop = [];
+
+var insertStyleElement = function(styleElement, options) {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+
+    options = options || {};
+    options.insertAt = options.insertAt || 'bottom';
+
+    if (options.insertAt === 'top') {
+        if (!lastStyleElementInsertedAtTop) {
+            head.insertBefore(styleElement, head.firstChild);
+        } else if (lastStyleElementInsertedAtTop.nextSibling) {
+            head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+        } else {
+            head.appendChild(styleElement);
+        }
+        styleElementsInsertedAtTop.push(styleElement);
+    } else if (options.insertAt === 'bottom') {
+        head.appendChild(styleElement);
+    } else {
+        throw new Error('Invalid value for parameter \'insertAt\'. Must be \'top\' or \'bottom\'.');
+    }
+};
+
+module.exports = {
+    // Create a <link> tag with optional data attributes
+    createLink: function(href, attributes) {
+        var head = document.head || document.getElementsByTagName('head')[0];
+        var link = document.createElement('link');
+
+        link.href = href;
+        link.rel = 'stylesheet';
+
+        for (var key in attributes) {
+            if ( ! attributes.hasOwnProperty(key)) {
+                continue;
+            }
+            var value = attributes[key];
+            link.setAttribute('data-' + key, value);
+        }
+
+        head.appendChild(link);
+    },
+    // Create a <style> tag with optional data attributes
+    createStyle: function(cssText, attributes, extraOptions) {
+        extraOptions = extraOptions || {};
+
+        var style = document.createElement('style');
+        style.type = 'text/css';
+
+        for (var key in attributes) {
+            if ( ! attributes.hasOwnProperty(key)) {
+                continue;
+            }
+            var value = attributes[key];
+            style.setAttribute('data-' + key, value);
+        }
+
+        if (style.sheet) { // for jsdom and IE9+
+            style.innerHTML = cssText;
+            style.sheet.cssText = cssText;
+            insertStyleElement(style, { insertAt: extraOptions.insertAt });
+        } else if (style.styleSheet) { // for IE8 and below
+            insertStyleElement(style, { insertAt: extraOptions.insertAt });
+            style.styleSheet.cssText = cssText;
+        } else { // for Chrome, Firefox, and Safari
+            style.appendChild(document.createTextNode(cssText));
+            insertStyleElement(style, { insertAt: extraOptions.insertAt });
+        }
+    }
+};
+
+},{}],3:[function(require,module,exports){
 /* Riot v3.8.1, @license MIT */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -2965,9 +3044,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
 
-},{}],2:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var riot = require('riot');
-module.exports = riot.tag2('example-tag', '<p id="findMe">Do I even Exist?</p> <todo></todo>', '', '', function(opts) {
+module.exports = riot.tag2('example-tag', '<p class="demo" id="findMe">Do I even Exist?</p> <todo></todo>', '', '', function(opts) {
+  var options = require("./app.css");
   var test1 = document.getElementById('findMe')
   console.log('test1', test1)
 
@@ -2980,6 +3060,7 @@ module.exports = riot.tag2('example-tag', '<p id="findMe">Do I even Exist?</p> <
    }
   this.on('mount', function(){
     var test3 = document.getElementById('findMe')
+    console.log(options);
     console.log('test3', test3)
   })
 });
@@ -2989,12 +3070,15 @@ riot.tag2('todo', '<h3>{opts.title}</h3> <ul> <li each="{item, i in items}">{ite
     this.add = function(e) {
       e.preventDefault()
       var input = this.refs.input
-      this.items.push(input.value)
-      input.value = ''
+      if(input.value!=""){
+       this.items.push(input.value)
+       input.value = ''
+      }
+      console.log(input.value);
     }.bind(this)
 });
-},{"riot":1}],3:[function(require,module,exports){
+},{"./app.css":1,"riot":3}],5:[function(require,module,exports){
 var riot = require('riot')
 var sample = require('../sample.tag')
 riot.mount(sample)
-},{"../sample.tag":2,"riot":1}]},{},[3]);
+},{"../sample.tag":4,"riot":3}]},{},[5]);
