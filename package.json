@@ -7,7 +7,8 @@
     "riot": "^3.8.1"
   },
   "scripts": {
-    "start": "live-server"
+    "start": "gulp browserify && live-server",
+    "build":"gulp browserify"
   },
   "devDependencies": {
     "browserify": "^14.5.0",
