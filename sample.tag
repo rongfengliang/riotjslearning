@@ -1,8 +1,10 @@
 <example-tag>
-  <p onClick={clickdemo} class="demo" id="findMe">Do I even Exist?</p>
+  <p onClick={clickdemo}  style ={styles} id="findMe">Do I even Exist?</p>
   <todo></todo>
   <script>
   var options = require("./app.css");
+  var stylesapp =require("./app.json")
+  this.styles =stylesapp;
   var test1 = document.getElementById('findMe')
   console.log('test1', test1)  // Fails
 
