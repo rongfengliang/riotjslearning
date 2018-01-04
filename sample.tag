@@ -1,5 +1,5 @@
 <example-tag>
-  <p class="demo" id="findMe">Do I even Exist?</p>
+  <p onClick={clickdemo} class="demo" id="findMe">Do I even Exist?</p>
   <todo></todo>
   <script>
   var options = require("./app.css");
