@@ -1,3 +1,4 @@
+(build status)[https://travis-ci.org/rongfengliang/riotjslearning.svg?branch=master](https://travis-ci.org/rongfengliang/riotjslearning.svg?branch=master)
 # init project
 > this demo  project add css support && require supprt
 ## prequire  
